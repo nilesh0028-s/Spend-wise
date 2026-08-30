@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser, loginUser } from '@/features/auth/auth.thunk';
+import { registerUser, loginUser, fetchMe } from '@/features/auth/auth.thunk';
 
 interface User {
   id: string;
@@ -43,7 +43,11 @@ const authSlice = createSlice({
 
       .addCase(loginUser.pending, handlePending)
       .addCase(loginUser.fulfilled, handleUserFulfilled)
-      .addCase(loginUser.rejected, handleRejected);
+      .addCase(loginUser.rejected, handleRejected)
+
+      .addCase(fetchMe.pending, handlePending)
+      .addCase(fetchMe.fulfilled, handleUserFulfilled)
+      .addCase(fetchMe.rejected, handleRejected);
   },
 });
 

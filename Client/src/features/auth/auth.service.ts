@@ -23,6 +23,17 @@ export async function Login(email: string, password: string) {
   }
 }
 
+export async function GetMe(token: string) {
+  try {
+    const response = await axios.get(`${API_URL}/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.message || 'Failed to fetch user';
+  }
+}
+
 export async function Logout() {
   await AsyncStorage.removeItem('token');
 }
