@@ -2,7 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { Link, router } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { registerUser } from '@/features/auth/auth.thunk';
+import { registerUser } from '@/redux/auth/auth.thunk';
 import { RootState, AppDispatch } from '@/redux/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 

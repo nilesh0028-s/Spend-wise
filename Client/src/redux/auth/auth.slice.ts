@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser, loginUser, fetchMe } from '@/features/auth/auth.thunk';
+import { registerUser, loginUser, fetchMe } from '@/redux/auth/auth.thunk';
 
 interface User {
   id: string;

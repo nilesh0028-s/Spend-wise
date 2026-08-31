@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, ActivityIndicator } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { fetchMe } from '@/features/auth/auth.thunk';
+import { fetchMe } from '@/redux/auth/auth.thunk';
 
 export default function Index() {
   const dispatch = useDispatch<AppDispatch>();

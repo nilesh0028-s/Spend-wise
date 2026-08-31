@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Login, Register, GetMe } from '@/features/auth/auth.service';
+import { Login, Register, GetMe } from '@/redux/auth/auth.service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const registerUser = createAsyncThunk(

@@ -3,13 +3,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { router } from 'expo-router';
 
 export default function Home() {
   const { user } = useSelector((state: RootState) => state.auth);
 
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" backgroundColor="#fff" />
+      <StatusBar style="light"/>
+
       {/* Top Half */}
       <View style={styles.topSection}>
         {/* Header */}
@@ -18,8 +20,8 @@ export default function Home() {
             <Text style={styles.greeting}>Hello, {user?.name ?? 'User'} 👋</Text>
             <Text style={styles.subtext}>Here's your financial overview</Text>
           </View>
-          <TouchableOpacity style={styles.notifBtn}>
-            <MaterialCommunityIcons name="bell-outline" size={22} color="#111" />
+          <TouchableOpacity style={styles.notifBtn} onPress={() => router.push('/features/AddExpenss')}>
+            <MaterialCommunityIcons name="note-edit-outline" size={24} color="#333" />
           </TouchableOpacity>
         </View>
 
