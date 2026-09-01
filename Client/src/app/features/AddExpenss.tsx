@@ -1,7 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { createBudget } from '@/redux/createExpenss/createExpense.thunk';
 
 const DEFAULT_CATEGORIES = [
   { id: 1, name: 'Food', icon: 'food-fork-drink', color: '#FF6B6B', bg: '#fff0f0', percent: 0.25 },
@@ -13,9 +16,15 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export default function AddExpenss() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading } = useSelector((state: RootState) => state.budget);
   const [budget, setBudget] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
 
   const totalBudget = parseFloat(budget) || 0;
   const getAmount = (percent: number) => Math.round(totalBudget * percent);
@@ -26,6 +35,23 @@ export default function AddExpenss() {
     const newAmount = parseFloat(value) || 0;
     const newPercent = totalBudget > 0 ? newAmount / totalBudget : 0;
     setCategories(prev => prev.map(c => c.id === id ? { ...c, percent: newPercent } : c));
+  };
+
+  const handleSave = async () => {
+    if (!totalBudget) return;
+    const payload = categories.map(c => ({
+      name: c.name,
+      icon: c.icon,
+      color: c.color,
+      allocatedAmount: getAmount(c.percent),
+    }));
+    const result = await dispatch(createBudget({ totalBudget, categories: payload }));
+    if (createBudget.fulfilled.match(result)) {
+      setShowSuccess(true);
+      timerRef.current = setTimeout(() => {
+        setShowSuccess(false);
+      }, 1500);
+    }
   };
 
   return (
@@ -95,9 +121,18 @@ export default function AddExpenss() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.btn}>
-          <Text style={styles.btnText}>Continue</Text>
+        <TouchableOpacity style={styles.btn} onPress={handleSave} disabled={loading}>
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnText}>Continue</Text>}
         </TouchableOpacity>
+
+        <Modal transparent visible={showSuccess} animationType="fade">
+          <View style={styles.overlay}>
+            <View style={styles.popup}>
+              <MaterialCommunityIcons name="check-circle" size={40} color="#34A748" />
+              <Text style={styles.popupText}>Budget created successfully!</Text>
+            </View>
+          </View>
+        </Modal>
 
       </ScrollView>
     </View>
@@ -132,4 +167,7 @@ const styles = StyleSheet.create({
   summaryValue: { fontSize: 15, fontWeight: 'bold', color: '#111' },
   btn: { backgroundColor: '#34A748', borderRadius: 14, height: 54, justifyContent: 'center', alignItems: 'center', marginBottom: 24 },
   btnText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' },
+  popup: { backgroundColor: '#fff', borderRadius: 16, padding: 28, alignItems: 'center', gap: 12 },
+  popupText: { fontSize: 16, fontWeight: '600', color: '#111' },
 });
