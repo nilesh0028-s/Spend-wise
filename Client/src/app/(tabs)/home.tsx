@@ -4,10 +4,25 @@ import { RootState } from '@/redux/store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { useEffect } from 'react';
+import { fetchBudget } from '@/redux/createExpenss/createExpense.thunk';
 
 export default function Home() {
   const { user } = useSelector((state: RootState) => state.auth);
+  const { budget } = useSelector((state: RootState) => state.budget);
+  
+  const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    dispatch(fetchBudget());
+  }, []);
+
+const date = new Date(budget?.month + "-01");
+
+// Get the full month name (e.g., "September")
+const monthName = date.toLocaleString('en-US', { month: 'long' });
   return (
     <View style={styles.container}>
       <StatusBar style="light"/>
@@ -19,6 +34,7 @@ export default function Home() {
           <View>
             <Text style={styles.greeting}>Hello, {user?.name ?? 'User'} 👋</Text>
             <Text style={styles.subtext}>Here's your financial overview</Text>
+             <Text style={styles.submonth}>{monthName} budget</Text>
           </View>
           <TouchableOpacity style={styles.notifBtn} onPress={() => router.push('/features/AddExpenss')}>
             <MaterialCommunityIcons name="note-edit-outline" size={24} color="#333" />
@@ -38,7 +54,7 @@ export default function Home() {
         <View style={styles.row}>
           <View style={styles.statCard}>
             <Text style={styles.statLabel}>Budget</Text>
-            <Text style={styles.statAmount}>₹ 60,000.00</Text>
+            <Text style={styles.statAmount}>₹ {budget?.totalBudget}</Text>
             <Text style={styles.statSub}>This Month</Text>
           </View>
           <View style={styles.statCard}>
@@ -80,6 +96,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#888',
     marginTop: 2,
+  },
+  submonth:{
+    fontSize: 14,
+    color: '#302e2e',
+    marginTop: 3,
   },
   notifBtn: {
     width: 40,

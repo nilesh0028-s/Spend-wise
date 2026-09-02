@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { SaveBudget } from './createExpense.service';
+import { SaveBudget,GetBudget } from './createExpense.service';
 
 export const createBudget = createAsyncThunk(
   'create/budget',
@@ -12,3 +12,14 @@ export const createBudget = createAsyncThunk(
     }
   }
 );
+export const fetchBudget=createAsyncThunk(
+  'fetch/budget',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await GetBudget();
+      return res;
+    } catch (error: any) {
+      return rejectWithValue(error);
+    }
+  }
+)

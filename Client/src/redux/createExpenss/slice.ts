@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createBudget } from './createExpense.thunk';
+import { createBudget,fetchBudget } from './createExpense.thunk';
 
 interface Category {
   name: string;
@@ -41,6 +41,18 @@ const budgetSlice = createSlice({
         state.budget = action.payload;
       })
       .addCase(createBudget.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchBudget.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchBudget.fulfilled, (state, action) => {
+        state.loading = false;
+        state.budget = action.payload;
+      })
+      .addCase(fetchBudget.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

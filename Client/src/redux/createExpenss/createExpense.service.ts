@@ -14,3 +14,16 @@ export async function SaveBudget(totalBudget: number, categories: any[]) {
     throw error.response?.data?.message || 'Budget creation failed';
   }
 }
+
+export async function GetBudget() {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axios.get(API_URL,{
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.message || 'Fetching the budget failed';
+  }
+}
+
