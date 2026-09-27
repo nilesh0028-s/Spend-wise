@@ -19,10 +19,9 @@ export default function Home() {
     dispatch(fetchBudget());
   }, []);
 
-const date = new Date(budget?.month + "-01");
-
-// Get the full month name (e.g., "September")
-const monthName = date.toLocaleString('en-US', { month: 'long' });
+const monthName = budget?.month
+  ? new Date(budget.month + "-01").toLocaleString('en-US', { month: 'long' })
+  : '';
   return (
     <View style={styles.container}>
       <StatusBar style="light"/>

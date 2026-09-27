@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_URL = 'http://10.204.222.173:5000/api/budget';
+const API_URL = 'http://10.74.65.173:5000/api/budget';
 
 export async function SaveBudget(totalBudget: number, categories: any[]) {
   try {
