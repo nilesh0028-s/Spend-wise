@@ -1,7 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Modal } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { createBudget } from '@/redux/createExpenss/createExpense.thunk';
@@ -56,7 +55,6 @@ export default function AddExpenss() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" />
       <ScrollView showsVerticalScrollIndicator={false}>
 
         {/* Budget Input */}

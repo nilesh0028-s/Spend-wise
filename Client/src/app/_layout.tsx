@@ -4,6 +4,8 @@ import { store } from '@/redux/store';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GetMe } from '@/redux/auth/auth.service';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 function AuthGuard() {
   const segments = useSegments();
@@ -35,8 +37,11 @@ function AuthGuard() {
 
 export default function RootLayout() {
   return (
-    <Provider store={store}>
-      <AuthGuard />
-    </Provider>
+    <SafeAreaProvider>
+      <StatusBar style="light" backgroundColor="#34A748" />
+      <Provider store={store}>
+        <AuthGuard />
+      </Provider>
+    </SafeAreaProvider>
   );
 }
