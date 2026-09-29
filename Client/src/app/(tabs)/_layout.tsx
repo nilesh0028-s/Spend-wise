@@ -26,7 +26,12 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="add-expense"
         options={{
-          title: '',
+          title: 'Add Expense',
+          headerShown:true,
+          tabBarLabel:'',
+          headerStyle: { backgroundColor: '#34A748' },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: 'bold' },
           tabBarIcon: () => (
             <View
               style={{
