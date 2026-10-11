@@ -5,6 +5,8 @@ const categorySchema = new mongoose.Schema({
   icon: { type: String },
   color: { type: String },
   allocatedAmount: { type: Number, required: true, default: 0 },
+  spentAmount: { type: Number,  default: 0 },
+
 });
 
 const budgetSchema = new mongoose.Schema({

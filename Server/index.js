@@ -10,6 +10,7 @@ app.use(express.json());
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/budget', require('./routes/budgetRoutes'));
+app.use('/api/expenses', require('./routes/expenseRoutes'));
 
 app.get('/', (req, res) => res.send('Spend-wise API running'));
 
