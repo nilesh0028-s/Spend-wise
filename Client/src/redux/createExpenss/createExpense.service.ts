@@ -45,3 +45,14 @@ export async function AddExpense(data: {
     throw error.response?.data?.message || 'Adding expense failed';
   }
 }
+export async function GetExpense(){
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axios.get(EXPENSE_URL, {headers:{Authorization: `Bearer ${token}`}});
+    return response.data;
+    
+  } catch (error:any) {
+    throw error.response?.data?.message || 'Fetching Expense failed';
+    
+  }
+}
