@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createBudget,fetchBudget } from './createExpense.thunk';
+import { createBudget, fetchBudget, addExpense } from './createExpense.thunk';
 
 interface Category {
   name: string;
   icon: string;
   color: string;
   allocatedAmount: number;
+  spentAmount: number;
 }
 
 interface BudgetState {
@@ -32,30 +33,15 @@ const budgetSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createBudget.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(createBudget.fulfilled, (state, action) => {
-        state.loading = false;
-        state.budget = action.payload;
-      })
-      .addCase(createBudget.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(fetchBudget.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchBudget.fulfilled, (state, action) => {
-        state.loading = false;
-        state.budget = action.payload;
-      })
-      .addCase(fetchBudget.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+      .addCase(createBudget.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(createBudget.fulfilled, (state, action) => { state.loading = false; state.budget = action.payload; })
+      .addCase(createBudget.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
+      .addCase(fetchBudget.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(fetchBudget.fulfilled, (state, action) => { state.loading = false; state.budget = action.payload; })
+      .addCase(fetchBudget.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
+      .addCase(addExpense.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(addExpense.fulfilled, (state) => { state.loading = false; })
+      .addCase(addExpense.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; });
   },
 });
 

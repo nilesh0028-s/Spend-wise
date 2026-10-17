@@ -1,6 +1,9 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+import { addExpense } from '../../redux/createExpenss/createExpense.thunk';
 
 const CATEGORIES = [
   { name: 'Food', icon: 'food-fork-drink', color: '#FF6B6B', bg: '#fff0f0' },
@@ -13,6 +16,9 @@ const CATEGORIES = [
 const PAYMENT_METHODS = ['UPI', 'Cash', 'Credit Card', 'Debit Card', 'Net Banking'];
 
 export default function AddExpense() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading } = useSelector((state: RootState) => state.budget);
+
   const [activeTab, setActiveTab] = useState<'manual' | 'scan'>('manual');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
@@ -22,6 +28,19 @@ export default function AddExpense() {
   const [showPayment, setShowPayment] = useState(false);
 
   const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  const handleAddExpense = () => {
+    if (!amount) return;
+    dispatch(addExpense({
+      category: selectedCategory.name,
+      amount: parseFloat(amount),
+      description,
+      date: today,
+      paymentMethod: selectedPayment,
+    }));
+    setAmount('');
+    setDescription('');
+  };
 
   return (
     <View style={styles.container}>
@@ -115,8 +134,8 @@ export default function AddExpense() {
         )}
 
         {/* Button */}
-        <TouchableOpacity style={styles.btn}>
-          <Text style={styles.btnText}>Add Expense</Text>
+        <TouchableOpacity style={[styles.btn, loading && { opacity: 0.7 }]} onPress={handleAddExpense} disabled={loading}>
+          <Text style={styles.btnText}>{loading ? 'Adding...' : 'Add Expense'}</Text>
         </TouchableOpacity>
 
       </ScrollView>

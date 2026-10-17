@@ -57,7 +57,7 @@ const monthName = budget?.month
         <View style={styles.row}>
           <View style={styles.statCard}>
             <Text style={styles.statLabel}>Budget</Text>
-            <Text style={styles.statAmount}>₹ {budget?.totalBudget}</Text>
+            <Text style={styles.statAmount}>₹ {budget?.totalBudget ?? '0'}</Text>
             <Text style={styles.statSub}>This Month</Text>
           </View>
           <View style={styles.statCard}>
@@ -70,26 +70,37 @@ const monthName = budget?.month
 
       {/* Bottom Half - Categories */}
       <ScrollView style={styles.bottomSection} showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 16, gap: 10 }}>
-        {budget?.categories?.map((cat: any) => (
-          <View key={cat.name} style={styles.catCard}>
-            <View style={[styles.iconBox, { backgroundColor: cat.color + '20' }]}>
-              <MaterialCommunityIcons name={cat.icon as any} size={20} color={cat.color} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={styles.catName}>{cat.name}</Text>
-                <Text style={styles.catAmount}>₹ {cat.allocatedAmount?.toLocaleString()}</Text>
-              </View>
-              <View style={styles.progressBg}>
-                <View style={[styles.progressFill, {
-                  width: `${Math.min(((cat.spentAmount ?? 0) / cat.allocatedAmount) * 100, 100)}%`,
-                  backgroundColor: cat.color,
-                }]} />
-              </View>
-              <Text style={styles.catSub}>₹ {cat.spentAmount ?? 0} spent</Text>
-            </View>
+        {!budget ? (
+          <View style={styles.emptyState}>
+            <MaterialCommunityIcons name="wallet-outline" size={64} color="#ccc" />
+            <Text style={styles.emptyTitle}>No Budget Set</Text>
+            <Text style={styles.emptySubtitle}>You haven't created a budget yet. Tap the edit icon above to set up your monthly budget.</Text>
+            <TouchableOpacity style={styles.emptyBtn} onPress={() => router.push('/features/AddExpenss')}>
+              <Text style={styles.emptyBtnText}>Create Budget</Text>
+            </TouchableOpacity>
           </View>
-        ))}
+        ) : (
+          budget.categories?.map((cat: any) => (
+            <View key={cat.name} style={styles.catCard}>
+              <View style={[styles.iconBox, { backgroundColor: cat.color + '20' }]}>
+                <MaterialCommunityIcons name={cat.icon as any} size={20} color={cat.color} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Text style={styles.catName}>{cat.name}</Text>
+                  <Text style={styles.catAmount}>₹ {cat.allocatedAmount?.toLocaleString()}</Text>
+                </View>
+                <View style={styles.progressBg}>
+                  <View style={[styles.progressFill, {
+                    width: `${Math.min(((cat.spentAmount ?? 0) / cat.allocatedAmount) * 100, 100)}%`,
+                    backgroundColor: cat.color,
+                  }]} />
+                </View>
+                <Text style={styles.catSub}>₹ {cat.spentAmount ?? 0} spent</Text>
+              </View>
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );
@@ -215,4 +226,15 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: 4,
   },
+  emptyState: {
+    alignItems: 'center', justifyContent: 'center',
+    paddingTop: 60, gap: 12, paddingHorizontal: 24,
+  },
+  emptyTitle: { fontSize: 18, fontWeight: 'bold', color: '#555' },
+  emptySubtitle: { fontSize: 13, color: '#aaa', textAlign: 'center', lineHeight: 20 },
+  emptyBtn: {
+    marginTop: 8, backgroundColor: '#34A748', borderRadius: 12,
+    paddingHorizontal: 28, paddingVertical: 12,
+  },
+  emptyBtnText: { color: '#fff', fontWeight: '600', fontSize: 14 },
 });
